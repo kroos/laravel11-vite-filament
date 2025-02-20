@@ -1,11 +1,12 @@
 <?php
 namespace App\Providers\Filament\Auth;
 
-use Filament\Pages\Auth\Login as BaseAuth;
-
 use Filament\Forms\Form;
-use Filament\Forms\Components\TextInput;
+
 use Filament\Forms\Components\Component;
+use Filament\Forms\Components\TextInput;
+use Filament\Pages\Auth\Login as BaseAuth;
+use Illuminate\Validation\ValidationException;
 
 class Login extends BaseAuth
 {
@@ -43,8 +44,10 @@ class Login extends BaseAuth
 	protected function throwFailureValidationException(): never
 	{
 		throw ValidationException::withMessages([
-			'data.login' => __('filament-panels::pages/auth/login.messages.failed'),
+			'data.username' => __('filament-panels::pages/auth/login.messages.failed'),
 		]);
 	}
+
+
 
 }

@@ -24,55 +24,35 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 // custom email reset password in
-// https://laracasts.com/discuss/channels/laravel/how-to-override-the-tomail-function-in-illuminateauthnotificationsresetpasswordphp
 // use App\Notifications\ResetPassword;
 
 // class Login extends Authenticatable implements MustVerifyEmail
-// class Login extends Authenticatable implements MustVerifyEmail, FilamentUser
 class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName
 {
 	// protected $connection = 'mysql';
-	protected $table = 'logins';
-	protected $primaryKey = 'id';
+	// protected $table = 'logins';
+	// protected $primaryKey = 'id';
 
 	// use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 	use HasFactory, Notifiable, SoftDeletes;
 
-	/**
-	* The attributes that are mass assignable.
-	*
-	* @var array<int, string>
-	*/
 	protected $guarded = [];
 	// protected $fillable = [
 	// 	'username',
-	// 	// 'email',
+	// 	'email',
 	// 	'password',
 	// 	'status',
 	// ];
 
-	/**
-	* The attributes that should be hidden for serialization.
-	*
-	* @var array<int, string>
-	*/
 	protected $hidden = [
 		'password',
 		'remember_token',
 	];
 
-	/**
-	* The attributes that should be cast.
-	*
-	* @var array<string, string>
-	*/
-	// protected $casts = [
+	protected $casts = [
 	// 	'email_verified_at' => 'datetime',
-	// 	// 'password' => 'hashed',		// this is because we are using clear text password
-	// ];
-
-	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	// db relation hasMany/hasOne
+		'password' => 'hashed',		// this is because we are using clear text password
+	];
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation belongsTo
@@ -94,8 +74,8 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 	// 	return $this->password;
 	// }
 
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// custom email reset password in
-	// https://laracasts.com/discuss/channels/laravel/how-to-override-the-tomail-function-in-illuminateauthnotificationsresetpasswordphp
 	// public function sendPasswordResetNotification($token)
 	// {
 	// 		$this->notify(new ResetPassword($token));
@@ -115,45 +95,25 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	* Get the e-mail address where password reset links are sent.
-	*
-	* @return string
-	*/
 	public function getEmailForPasswordReset()
 	{
-		// return $this->email;
 		return $this->belongstouser->email;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// for email Notifiable
-	// https://laravel.com/docs/7.x/notifications
 	public function routeNotificationForMail($notification)
 	{
-		// Return email address only...
-		// return $this->belongtouser->email;
 		return [$this->belongstouser->email => $this->belongstouser->name];
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// used for mustVerifyEmail
-	/**
-	* Determine if the user has verified their email address.
-	*
-	* @return bool
-	*/
 	public function hasVerifiedEmail()
 	{
-		// return ! is_null($this->email_verified_at);
 		return ! is_null($this->belongstouser->email_verified_at);
 	}
 
-	/**
-	* Mark the given user's email as verified.
-	*
-	* @return bool
-	*/
 	public function markEmailAsVerified()
 	{
 		return $this->belongstouser->forceFill([
@@ -164,7 +124,6 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 		// Method to send email verification
 		//	public function sendEmailVerificationNotification()
 		//	{
-		//		// We override the default notification and will use our own
 		//		$this->notify(new EmailVerificationNotification());
 		//	}
 

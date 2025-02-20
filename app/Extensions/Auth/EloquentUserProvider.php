@@ -13,8 +13,12 @@ use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 
 // use Illuminate\Contracts\Auth\Authenticatable as UserContract;
 // use Illuminate\Contracts\Auth\UserProvider;
+
+// useBcryptHasher
 use Illuminate\Contracts\Hashing\Hasher as HasherContract;
-use Illuminate\Contracts\Support\Arrayable;
+
+// plain text password or any custom password hashing
+// use App\Extensions\Auth\PlainHasher as HasherContract;
 
 // class EloquentUserProvider extends ServiceProvider
 class EloquentUserProvider extends UserProvider
@@ -95,37 +99,18 @@ class EloquentUserProvider extends UserProvider
 		return $rememberToken && hash_equals($rememberToken, $token) ? $retrievedModel : null;
 	}
 
-
-
-//	public function validateCredentials(UserContract $user, array $credentials)
-//	{
-//		$plain = $credentials['password'];
-//		// dd($plain, $credentials['password']);
-//		// this is for plain text user password
-//		// dd($plain, $user->getAuthPassword());
-//		// if ($plain == $user->getAuthPassword() && $user->belongstouser->status == true) {
-//		// 	return true;
-//		// } else {
-//		// 	return false;
-//		// }
-//		dd($this->hasher->check($plain, $user->getAuthPassword()));
-//		return ($this->hasher->check($plain, $user->getAuthPassword()) && $user->belongstouser->status == true);
-//	}
-
 	public function validateCredentials(UserContract $user, #[\SensitiveParameter] array $credentials)
 	{
+		$plain = $credentials['password'];
 		// dd($credentials['password'], $user->getAuthPassword(), $this->hasher->check($credentials['password'], $user->getAuthPassword()), $this->hasher->info($user->getAuthPassword()), $this->hasher->make($credentials['password']));
 		if (is_null($plain = $credentials['password'])) {
 			return false;
 		}
-
 		if (is_null($hashed = $user->getAuthPassword())) {
 			return false;
 		}
 
-		// return $this->hasher->check($plain, $hashed);
+		return $this->hasher->check($plain, $hashed);
 		// return ($this->hasher->check($plain, $hashed) && $user->belongstouser->active == true && $user->active == true);
-		return ($this->hasher->check($plain, $hashed));
-
 	}
 }
