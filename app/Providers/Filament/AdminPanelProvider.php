@@ -19,6 +19,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 // extension
+// https://filamentphp.com/docs/3.x/panels/users
 use App\Providers\Filament\Auth\Login;
 
 class AdminPanelProvider extends PanelProvider
