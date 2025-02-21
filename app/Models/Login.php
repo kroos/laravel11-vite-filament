@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 // use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\CanResetPassword;
 
 // filament
 use Filament\Models\Contracts\FilamentUser;
@@ -27,7 +28,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 // use App\Notifications\ResetPassword;
 
 // class Login extends Authenticatable implements MustVerifyEmail
-class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName
+// class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName
+class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, HasName, CanResetPassword
 {
 	// protected $connection = 'mysql';
 	// protected $table = 'logins';
@@ -39,7 +41,6 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 	protected $guarded = [];
 	// protected $fillable = [
 	// 	'username',
-	// 	'email',
 	// 	'password',
 	// 	'status',
 	// ];
@@ -91,35 +92,39 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 
 	public function getFilamentName(): string
 	{
-		return $this->belongstouser->name;
+		return $this->belongstouser?->name;
 	}
 
+	public function getFilamentEmail(): string
+	{
+		return $this->belongstouser?->email;
+	}
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	public function getEmailForPasswordReset()
 	{
-		return $this->belongstouser->email;
+		return $this->belongstouser?->email;
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// for email Notifiable
 	public function routeNotificationForMail($notification)
 	{
-		return [$this->belongstouser->email => $this->belongstouser->name];
+		return [$this->belongstouser?->email => $this->belongstouser?->name];
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// used for mustVerifyEmail
 	public function hasVerifiedEmail()
 	{
-		return ! is_null($this->belongstouser->email_verified_at);
+		return ! is_null($this->belongstouser?->email_verified_at);
 	}
 
 	public function markEmailAsVerified()
 	{
-		return $this->belongstouser->forceFill([
+		return $this->belongstouser?->forceFill([
 			'email_verified_at' => $this->freshTimestamp(),
 			])->save();
-		}
+	}
 
 		// Method to send email verification
 		//	public function sendEmailVerificationNotification()
@@ -131,4 +136,4 @@ class Login extends Authenticatable implements MustVerifyEmail, FilamentUser, Ha
 		// all acl will be done here
 
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
-	}
+}

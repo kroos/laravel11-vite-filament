@@ -26,62 +26,14 @@ class User extends Authenticatable
 	protected $table = 'users';
 	protected $dates = ['deleted_at'];
 
-	/**
-	 * The attributes that are mass assignable.
-	 *
-	 * @var list<string>
-	 */
-	// protected $fillable = [
-	// 	'name',
-	// 	'email',
-	// 	'password',
-	// ];
-
 	protected $guarded = [];
 
-	/**
-	 * The attributes that should be hidden for serialization.
-	 *
-	 * @var list<string>
-	 */
-	// protected $hidden = [
-	// 	'password',
-	// 	'remember_token',
-	// ];
-
-	/**
-	 * Get the attributes that should be cast.
-	 *
-	 * @return array<string, string>
-	 */
 	protected function casts(): array
 	{
 		return [
 			'email_verified_at' => 'datetime',
-			'password' => 'hashed',
 		];
 	}
-
-	 /**
-	 * The attributes that should be cast.
-	 *
-	 * @var array<string, string>
-	 */
-	protected $casts = [
-		'email_verified_at' => 'datetime',
-		// 'password' => 'hashed',		// this is because we are using clear text password
-	];
-
-	// public function getEmailForPasswordReset()
-	// {
-	// 	return $this->email;
-	// }
-
-	// // this is important for sending email
-	// public function routeNotificationForMail($notification)
-	// {
-	// 	return $this->email;
-	// }
 
 	/////////////////////////////////////////////////////////////////////////////////////////////////////
 	// db relation hasMany/hasOne

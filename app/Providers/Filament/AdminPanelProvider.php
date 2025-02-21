@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Providers\Filament;
 
 use Filament\Http\Middleware\Authenticate;
@@ -21,6 +20,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 // extension
 // https://filamentphp.com/docs/3.x/panels/users
 use App\Providers\Filament\Auth\Login;
+use App\Providers\Filament\Auth\Register;
+use App\Providers\Filament\Auth\PasswordReset\CustomRequestPasswordReset;
+use App\Providers\Filament\Auth\PasswordReset\CustomResetPassword;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,9 +32,11 @@ class AdminPanelProvider extends PanelProvider
 		->default()
 		->id('admin')
 		->path('admin')
+		->authGuard('web')
+		->authPasswordBroker('logins')
 		->login(Login::class)
-		->registration()
-		->passwordReset()
+		->registration(Register::class)
+		->passwordReset(CustomRequestPasswordReset::class, CustomResetPassword::class)
 		->emailVerification()
 		->profile()
 		->colors([
