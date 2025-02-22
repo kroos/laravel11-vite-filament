@@ -23,6 +23,7 @@ use App\Providers\Filament\Auth\Login;
 use App\Providers\Filament\Auth\Register;
 use App\Providers\Filament\Auth\PasswordReset\CustomRequestPasswordReset;
 use App\Providers\Filament\Auth\PasswordReset\CustomResetPassword;
+use App\Providers\Filament\Auth\EditProfile;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -38,7 +39,7 @@ class AdminPanelProvider extends PanelProvider
 		->registration(Register::class)
 		->passwordReset(CustomRequestPasswordReset::class, CustomResetPassword::class)
 		->emailVerification()
-		->profile()
+		->profile(EditProfile::class)
 		->colors([
 			'primary' => Color::Amber,
 		])
